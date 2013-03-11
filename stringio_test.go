@@ -13,14 +13,14 @@ func assertNotEqual(x interface{}, y interface{}) bool {
 }
 
 func simpleCreateAndSeek(b []byte) (sio *stringIO) {
-  sio = StringIO()
+  sio = New()
   _, _ = sio.Write(b)
   sio.Seek(0, 0)
   return
 }
 
 func TestFd(t *testing.T) {
-  sio := StringIO()
+  sio := New()
   fd, err := sio.Fd()
   if assertEquals(fd, -1) == false {
     t.Errorf("Invalid fd returns")
@@ -32,9 +32,9 @@ func TestFd(t *testing.T) {
 }
 
 func TestGoName(t *testing.T) {
-  sio := StringIO()
+  sio := New()
   if assertEquals(sio.Name(), sio.GoString()) == false {
-    t.Errorf("StringIO name mismatch. Name: %s,"+
+    t.Errorf("New name mismatch. Name: %s,"+
       "GoString: %s",
       sio.Name(),
       sio.GoString())
@@ -42,25 +42,25 @@ func TestGoName(t *testing.T) {
   sio.Close()
 }
 
-func TestEmptyStringIO(t *testing.T) {
-  sio := StringIO()
+func TestEmptyNew(t *testing.T) {
+  sio := New()
   if assertEquals(sio.String(), "") == false {
-    t.Errorf("Empty StringIO string is not \"\"")
+    t.Errorf("Empty New string is not \"\"")
   }
   sio.Close()
 }
 
 func TestClose(t *testing.T) {
-  sio := StringIO()
+  sio := New()
   sio.Close()
   if assertNotEqual(sio.Name(), "StringIO <closed>") {
-    t.Errorf("Closed StringIO name invalid")
+    t.Errorf("Closed New name invalid")
   }
 }
 
 func TestWriteBytes(t *testing.T) {
   b := []byte{'a', 'b', 'c'}
-  sio := StringIO()
+  sio := New()
   n, err := sio.Write(b)
   sio.Seek(0, 0)
   if assertEquals(n, 0) || assertNotEqual(n, 3) {
@@ -89,7 +89,7 @@ func TestGetValueString(t *testing.T) {
   s = sio.GetValueString()
   if assertNotEqual(s, "<nil>") {
     t.Errorf("GetValueString return not <nil> " +
-      "on closed StringIO object")
+      "on closed New object")
   }
 }
 
@@ -105,7 +105,7 @@ func TestGetValueBytes(t *testing.T) {
   bb = sio.GetValueBytes()
   if assertNotEqual(len(bb), 0) {
     t.Errorf("GetValueBytes return non-zero byte " +
-      "array on closed StringIO")
+      "array on closed New")
   }
 }
 
@@ -179,7 +179,7 @@ func TestResizeWrite(t *testing.T) {
 
 func TestReadWriteString(t *testing.T) {
   s := "This is a test\n"
-  sio := StringIO()
+  sio := New()
   sio.WriteString(s)
   sio.Seek(0, 0)
   p := make([]byte, len(s))
@@ -191,7 +191,7 @@ func TestReadWriteString(t *testing.T) {
 
 func TestReadWriteUnicodeString(t *testing.T) {
   s := "今天是 2009年 12月 13日 星期日\n"
-  sio := StringIO()
+  sio := New()
   sio.WriteString(s)
   sio.Seek(0, 0)
   p := make([]byte, len(s))
@@ -202,12 +202,12 @@ func TestReadWriteUnicodeString(t *testing.T) {
   }
 }
 
-func TestErrorOnClosedStringIO(t *testing.T) {
-  sio := StringIO()
+func TestErrorOnClosedNew(t *testing.T) {
+  sio := New()
   sio.Close()
   n, err := sio.Seek(0, 0)
   if assertNotEqual(n, int64(0)) {
-    t.Errorf("Seek on closed StringIO error: %s", err)
+    t.Errorf("Seek on closed New error: %s", err)
   }
 }
 

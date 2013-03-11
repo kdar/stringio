@@ -35,7 +35,7 @@ type stringIO struct {
 }
 
 // Factory method served as the constructor.
-func StringIO() *stringIO {
+func New() *stringIO {
   buf := make([]byte, buf_size)
   sio := new(stringIO)
   sio.buf = buf
@@ -45,6 +45,8 @@ func StringIO() *stringIO {
   sio.name = fmt.Sprintf("StringIO <%p>", sio)
   return sio
 }
+
+func (s *stringIO) Len() int { return len(s.buf[s.pos:s.last]) }
 
 // Query for stringio object's fd is an error.
 func (s *stringIO) Fd() (fd int, err error) {
